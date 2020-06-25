@@ -1,4 +1,4 @@
-# tfeksebs - build and run Docker image on EKS using ECR
+# tfeksebs - build and run Docker image on EKS, add EBS storage
 
 ## Intro
 
@@ -58,9 +58,9 @@ This project lists all the steps that are required to
 ```
   aws ecr create-repository --repository-name pythonhelloworld
 
-  aws ecr get-login-password \\<br>
-  | docker login \\<br>
-      --username AWS \\<br>
+  aws ecr get-login-password \
+  | docker login \
+      --username AWS \
       --password-stdin 094033154904.dkr.ecr.eu-west-1.amazonaws.com
 
   docker tag pythonhelloworld 094033154904.dkr.ecr.eu-west-1.amazonaws.com/pythonhelloworld
