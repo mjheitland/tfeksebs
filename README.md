@@ -71,7 +71,7 @@ This project lists all the steps that are required to
 ## Layer 0 - Terraform Remote State 
 
 Set up remote state for Terraform:<br>
-(if you want to save TF state including this layer, run the commands twice and remove the comments for the backend in tfstate.tf on the second run):<br>
+(if you want to save TF state including this layer, run the commands twice and remove the comments for the backend in tfstate.tf on the second run):
 
 ```
 cd 0_tfstate
@@ -116,7 +116,8 @@ These steps are done automatically if you deploy 2_compute with Terraform:
 
 * create EC2 role "eks_node_role" with AmazonEKSWorkerNodePolicy, AmazonEKS_CNI_Policy and AmazonEC2ContainerRegistryReadOnly policy  (Trust Relationship set to ec2.amazonaws.com)
 
-* create EKS cluster "eksebs" linked to the VPC, subnets, "EKSRole" and security group:<br>
+* create EKS cluster "eksebs" linked to the VPC, subnets, "EKSRole" and security group:
+```
 aws eks create-cluster \
    --region eu-west-1 \
    --name eksebs \
@@ -124,6 +125,7 @@ aws eks create-cluster \
    --role-arn arn:aws:iam::094033154904:role/eks_cluster_role \
    --resources-vpc-config subnetIds=subnet-0efb86813f8213218,subnet-0b75bcf7ea0d4c711,securityGroupIds=sg-0daaf335839a8c338
 aws eks describe-cluster ebsEKS
+```
 
 * add EKS worker nodes: set name to "eksebs_nodegroup", set role to eks_node_role, set ssh key to "IrelandEKS" and leave the rest to its defaults
 
@@ -138,29 +140,29 @@ terraform destroy -auto-approve
 
 ## Manual steps to configure kubectl, deploy pod and service and test web server
 
-* configure kubectl:<br>
+* configure kubectl:
 ```
-aws eks --region eu-west-1 update-kubeconfig --name eksebs<br>
-kubectl get svc<br>
+aws eks --region eu-west-1 update-kubeconfig --name eksebs
+kubectl get svc
 kubectl get nodes
 ```
 
-* deploy Kubernetes pod:<br>
+* deploy Kubernetes pod:
 ```
-kubectl apply -f deployment.yaml<br>
-kubectl get deployment eksebs-deployment -o yaml<br>
+kubectl apply -f deployment.yaml
+kubectl get deployment eksebs-deployment -o yaml
 kubectl get pods
 ```
 
-* deploy Kubernetes service (adds an ELB so that we can reach the pod from outside):<br>
+* deploy Kubernetes service (adds an ELB so that we can reach the pod from outside):
 ```
-kubectl apply -f service.yaml<br>
+kubectl apply -f service.yaml
 kubectl get service eksebs-service
 ```
 
-* test the app running on Docker in a Kubernetes cluster in the browser (use the output from the last command):<br>
+* test the app running on Docker in a Kubernetes cluster in the browser (use the output from the last command):
 ```
-a83db63935a0e4de0ad8460e1971db19-1300743338.eu-west-1.elb.amazonaws.com<br>
+a83db63935a0e4de0ad8460e1971db19-1300743338.eu-west-1.elb.amazonaws.com
 ```
 should return "Hello world!"
 
