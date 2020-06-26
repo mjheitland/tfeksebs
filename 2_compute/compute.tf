@@ -74,7 +74,7 @@ variable "nodegroup_name" {
 variable "cluster_endpoint_private_access_cidrs" {
   description = "List of CIDR blocks which can access the Amazon EKS private API server endpoint, when public access is disabled"
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+  default     = ["10.0.0.0/16"]
 }
 
 variable "cluster_endpoint_private_access" {

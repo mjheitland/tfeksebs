@@ -154,6 +154,23 @@ kubectl get nodes
 ```
 
 
+## Manual steps to mount EBS volume to EKS pod "app" ("app" is automatically writing logs to /data/out.txt)
+
+* deploy the Amazon EBS CSI Driver, create a storage class (SC), a persistent volume (PV) and a persistent volume claim (PVC):<br>
+[see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
+```
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
+kubectl apply -f ebs/
+kubectl get persistentvolumes
+```
+The kubectl command creates a StorageClass, PersistentVolumeClaim (PVC), and pod. The pod references the PVC. An Amazon EBS volume is provisioned only when the pod is created.
+
+*  to verify that the pod is successfully writing data to the volume, run the following command:
+```
+kubectl exec -it app cat /data/out.txt
+```
+
+
 ## Manual steps to mount EFS volume to EKS pods (pod "app1" is automatically writing logs to /data/out1.txt, pod "app2" is automatically writing logs to /data/out2.txt, every pod can see both files in /data)
 
 * deploy the Amazon EFS CSI Driver, run the following command:<br>
@@ -174,23 +191,6 @@ kubectl exec -it app1 -- tail /data/out2.txt
 
 kubectl exec -it app2 -- tail /data/out1.txt
 kubectl exec -it app2 -- tail /data/out2.txt 
-```
-
-
-## Manual steps to mount EBS volume to EKS pod "app" ("app" is automatically writing logs to /data/out.txt)
-
-* deploy the Amazon EBS CSI Driver, create a storage class (SC), a persistent volume (PV) and a persistent volume claim (PVC):<br>
-[see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
-```
-kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
-kubectl apply -f ebs/
-kubectl get persistentvolumes
-```
-The kubectl command creates a StorageClass, PersistentVolumeClaim (PVC), and pod. The pod references the PVC. An Amazon EBS volume is provisioned only when the pod is created.
-
-*  to verify that the pod is successfully writing data to the volume, run the following command:
-```
-kubectl exec -it app cat /data/out.txt
 ```
 
 
