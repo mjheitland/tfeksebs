@@ -18,3 +18,11 @@ spec:
         image: 094033154904.dkr.ecr.eu-west-1.amazonaws.com/pythonhelloworld
         ports:
         - containerPort: 8080
+        volumeMounts:
+          - name: persistent-storage
+            mountPath: /data
+      volumes:
+      - name: persistent-storage
+        persistentVolumeClaim:
+          claimName: efs-claim
+      

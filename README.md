@@ -194,7 +194,7 @@ kubectl exec -it app cat /data/out.txt
 ```
 
 
-## Manual steps to deploy Kubernetes service and test web app running on Docker container
+## Manual steps to deploy Kubernetes service, test web app running on Docker container and access EFS share
 
 * deploy Kubernetes pod:
 ```
@@ -214,3 +214,12 @@ kubectl get service eksebs-service
 xxx.eu-west-1.elb.amazonaws.com
 ```
 should return "Hello world!"
+
+* test access to EFS share
+```
+kubectl get pods
+kubectl exec -it eksebs-deployment-xxx sh
+cd /data
+ls
+exit
+```
