@@ -166,8 +166,7 @@ xxx.eu-west-1.elb.amazonaws.com
 ```
 should return "Hello world!"
 
-* 
-To deploy the Amazon EBS CSI Driver, run the following command:
+* To deploy the Amazon EBS CSI Driver, run the following command:
 [see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
