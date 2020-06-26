@@ -127,7 +127,7 @@ aws eks create-cluster \
 aws eks describe-cluster ebsEKS
 ```
 
-* add EKS worker nodes: set name to "eksebs_nodegroup", set role to eks_node_role, set ssh key to "IrelandEKS" and leave the rest to its defaults
+* add EKS worker nodes: set name to "eksebs_nodegroup", set role to eks_node_role, set ssh key to "IrelandEKS" and leave the rest to its defaults (takes about 15 minutes)
 
 ```
 cd 2_eks
@@ -160,10 +160,15 @@ kubectl apply -f service.yaml
 kubectl get service eksebs-service
 ```
 
-* test the app running on Docker in a Kubernetes cluster in the browser (use the output from the last command):
+* test the app running on Docker in a Kubernetes cluster in the browser (use the ELB arn output from the last command):
 ```
-a83db63935a0e4de0ad8460e1971db19-1300743338.eu-west-1.elb.amazonaws.com
+xxx.eu-west-1.elb.amazonaws.com
 ```
 should return "Hello world!"
 
-* [Add persistent storage to EKS](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
+* 
+To deploy the Amazon EBS CSI Driver, run the following command:
+[see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
+```
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
+```
