@@ -154,7 +154,7 @@ kubectl get nodes
 ```
 
 
-## Manual setup to mount EFS volume to EKS pods
+## Manual steps to mount EFS volume to EKS pods (pod "app1" is automatically writing logs to /data/out1.txt, pod "app2" is automatically writing logs to /data/out2.txt, every pod can see both files in /data)
 
 * deploy the Amazon EFS CSI Driver, run the following command:<br>
 [see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
@@ -165,7 +165,7 @@ kubectl get persistentvolumes
 
 * set "volumehandle" to output value efs_id in efs/pv.yaml
 
-* test EFS access from two different pods (out1.txt was created by app1, out2.txt by app2)
+* test EFS access from two different pods (out1.txt was created by app1, out2.txt by app2):
 ```
 kubectl apply -f efs/
 
@@ -177,7 +177,7 @@ kubectl exec -it app2 -- tail /data/out2.txt
 ```
 
 
-## Manual setup to mount EBS volume to EKS pods
+## Manual steps to mount EBS volume to EKS pod "app" ("app" is automatically writing logs to /data/out.txt)
 
 * deploy the Amazon EBS CSI Driver, create a storage class (SC), a persistent volume (PV) and a persistent volume claim (PVC):<br>
 [see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
@@ -194,7 +194,7 @@ kubectl exec -it app cat /data/out.txt
 ```
 
 
-## Manual setup to deploy Kubernetes service and test web app running on Docker container
+## Manual steps to deploy Kubernetes service and test web app running on Docker container
 
 * deploy Kubernetes pod:
 ```
