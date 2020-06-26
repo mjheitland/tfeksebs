@@ -188,15 +188,20 @@ kubectl get persistentvolumes
 ```
 The kubectl command creates a StorageClass, PersistentVolumeClaim (PVC), and pod. The pod references the PVC. An Amazon EBS volume is provisioned only when the pod is created.
 
+*  to verify that the pod is successfully writing data to the volume, run the following command:
+```
+kubectl exec -it app cat /data/out.txt
+```
+
+
+## Manual setup to deploy Kubernetes service and test web app running on Docker container
+
 * deploy Kubernetes pod:
 ```
 kubectl apply -f deployment.yaml
 kubectl get deployment eksebs-deployment -o yaml
 kubectl get pods
 ```
-
-
-## deploy Kubernetes service and test web app running on Docker container
 
 * deploy Kubernetes service (adds an ELB so that we can reach the pod from outside):
 ```
