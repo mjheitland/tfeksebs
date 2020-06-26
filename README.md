@@ -144,7 +144,7 @@ terraform apply -auto-approve
 terraform destroy -auto-approve
 ```
 
-## Manual steps to configure kubectl, deploy pod and service and test web server
+## Manual steps to configure kubectl to point to our new EKS
 
 * configure kubectl:
 ```
@@ -153,22 +153,31 @@ kubectl get svc
 kubectl get nodes
 ```
 
+
+## Manual setup to mount EFS volume to EKS pods
+
 * deploy the Amazon EFS CSI Driver, run the following command:<br>
 [see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
-kubectl apply -f efs/
 kubectl get persistentvolumes
 ```
 
 * set "volumehandle" to output value efs_id in efs/pv.yaml
 
-* test EFS access from two different pods
+* test EFS access from two different pods (out1.txt was created by app1, out2.txt by app2)
 ```
 kubectl apply -f efs/
+
 kubectl exec -it app1 -- tail /data/out1.txt 
+kubectl exec -it app1 -- tail /data/out2.txt 
+
 kubectl exec -it app2 -- tail /data/out1.txt
+kubectl exec -it app2 -- tail /data/out2.txt 
 ```
+
+
+## Manual setup to mount EBS volume to EKS pods
 
 * deploy the Amazon EBS CSI Driver, create a storage class (SC), a persistent volume (PV) and a persistent volume claim (PVC):<br>
 [see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
@@ -185,6 +194,9 @@ kubectl apply -f deployment.yaml
 kubectl get deployment eksebs-deployment -o yaml
 kubectl get pods
 ```
+
+
+## deploy Kubernetes service and test web app running on Docker container
 
 * deploy Kubernetes service (adds an ELB so that we can reach the pod from outside):
 ```
