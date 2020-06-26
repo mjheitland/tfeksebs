@@ -51,9 +51,6 @@ This project lists all the steps that are required to
 
   aws sts get-caller-identity
 ```
-* create key pair "IrelandEKS" in eu-west-1 and download the private key file "IrelandEKS.pem"<br>
-(use ssh-keygen if you do not have a private key in ~/.ssh/id_rsa)
-
 * create ECR repository, log into ECR, tag image and push it to ECR:
 ```
   aws ecr create-repository --repository-name pythonhelloworld
@@ -70,9 +67,10 @@ This project lists all the steps that are required to
 
 ## Layer 0 - Terraform Remote State 
 
-Set up remote state for Terraform:<br>
-(if you want to save TF state including this layer, run the commands twice and remove the comments for the backend in tfstate.tf on the second run):
+Set up remote state for Terraform creating a bucket for the state and a DynamoDB table for locking<br>
+(if you want to save TF state including this layer, run the commands twice and remove the comments for the backend in tfstate.tf on the second run)
 
+Terraform code:
 ```
 cd 0_tfstate
 
@@ -97,6 +95,8 @@ The following steps are done automatically if you deploy 1_network with Terrafor
 
 * add a security group for this VPC with port 443 (https) and 2049 (EFS) open for all traffic (0.0.0.0/0) in the new VPC
 
+
+Terraform code:
 ```
 cd 1_network
 
@@ -112,9 +112,12 @@ terraform destroy -auto-approve
 
 These steps are done automatically if you deploy 2_compute with Terraform:
 
+* create a key pair "IrelandEKS" in eu-west-1 and download the private key file "IrelandEKS.pem"<br>
+(with Terraform: use ssh-keygen if you do not have a private key in ~/.ssh/id_rsa)
+
 * create EKS cluster role "eks_cluster_role" with AmazonEKSClusterPolicy (Trust Relationship set to eks.amazonaws.com)
 
-* create EC2 role "eks_node_role" with AmazonEKSWorkerNodePolicy, AmazonEKS_CNI_Policy and AmazonEC2ContainerRegistryReadOnly policy  (Trust Relationship set to ec2.amazonaws.com)
+* create EC2 role "eks_node_role" with AmazonEKSWorkerNodePolicy, AmazonEKS_CNI_Policy and AmazonEC2ContainerRegistryReadOnly policy and a policy to work with EBS volumes (Trust Relationship set to ec2.amazonaws.com)
 
 * create EKS cluster "eksebs" linked to the VPC, subnets, "EKSRole" and security group:
 ```
@@ -129,6 +132,9 @@ aws eks describe-cluster ebsEKS
 
 * add EKS worker nodes: set name to "eksebs_nodegroup", set role to eks_node_role, set ssh key to "IrelandEKS" and leave the rest to its defaults (takes about 15 minutes)
 
+* create EFS network share
+
+Terraform code:
 ```
 cd 2_eks
 terraform init -backend-config=../backend.config

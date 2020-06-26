@@ -319,11 +319,13 @@ resource "aws_efs_file_system" "efs" {
 resource "aws_efs_mount_target" "efs_mounttarget_1" {
   file_system_id = aws_efs_file_system.efs.id
   subnet_id      = data.terraform_remote_state.tf_network.outputs.subpub1_id
+  security_groups = [data.terraform_remote_state.tf_network.outputs.sgpub1_id]
 }
 
 resource "aws_efs_mount_target" "efs_mounttarget_2" {
-  file_system_id = aws_efs_file_system.efs.id
-  subnet_id      = data.terraform_remote_state.tf_network.outputs.subpub2_id
+  file_system_id  = aws_efs_file_system.efs.id
+  subnet_id       = data.terraform_remote_state.tf_network.outputs.subpub2_id
+  security_groups = [data.terraform_remote_state.tf_network.outputs.sgpub1_id]
 }
 
 
