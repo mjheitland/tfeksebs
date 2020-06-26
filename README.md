@@ -95,7 +95,7 @@ The following steps are done automatically if you deploy 1_network with Terrafor
 
 * for both subnets, auto-assign public ip4 address
 
-* add a security group for this VPC with port 443 open for all traffic (0.0.0.0/0) in the new VPC
+* add a security group for this VPC with port 443 (https) and 2049 (EFS) open for all traffic (0.0.0.0/0) in the new VPC
 
 ```
 cd 1_network
@@ -147,6 +147,32 @@ kubectl get svc
 kubectl get nodes
 ```
 
+* deploy the Amazon EFS CSI Driver, run the following command:<br>
+[see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
+```
+kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
+kubectl apply -f efs/
+kubectl get persistentvolumes
+```
+
+* set "volumehandle" to output value efs_id in efs/pv.yaml
+
+* test EFS access from two different pods
+```
+kubectl apply -f efs/
+kubectl exec -it app1 -- tail /data/out1.txt 
+kubectl exec -it app2 -- tail /data/out1.txt
+```
+
+* deploy the Amazon EBS CSI Driver, create a storage class (SC), a persistent volume (PV) and a persistent volume claim (PVC):<br>
+[see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
+```
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
+kubectl apply -f ebs/
+kubectl get persistentvolumes
+```
+The kubectl command creates a StorageClass, PersistentVolumeClaim (PVC), and pod. The pod references the PVC. An Amazon EBS volume is provisioned only when the pod is created.
+
 * deploy Kubernetes pod:
 ```
 kubectl apply -f deployment.yaml
@@ -165,9 +191,3 @@ kubectl get service eksebs-service
 xxx.eu-west-1.elb.amazonaws.com
 ```
 should return "Hello world!"
-
-* To deploy the Amazon EBS CSI Driver, run the following command:
-[see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
-```
-kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
-```

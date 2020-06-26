@@ -181,10 +181,13 @@ resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOn
   role       = aws_iam_role.eks_node_role.id
 }
 
-resource "aws_iam_role_policy" "Amazon-EBS-CSI-Driver-Policy" {
-    name   = "Amazon-EBS-CSI-Driver-Policy"
-    role   = aws_iam_role.eks_node_role.id
-    policy = <<POLICY
+resource "aws_iam_role_policy" "Amazon_EBS_CSI_Driver_Policy" {
+  name   = "Amazon_EBS_CSI_Driver_Policy"
+  role   = aws_iam_role.eks_node_role.id
+  policy = <<POLICY
+{
+  "Version":"2012-10-17",
+  "Statement":[
     {
       "Effect": "Allow",
       "Action": [
@@ -203,6 +206,8 @@ resource "aws_iam_role_policy" "Amazon-EBS-CSI-Driver-Policy" {
       ],
       "Resource": "*"
     }
+  ]
+}
 POLICY
 }
 
@@ -297,6 +302,31 @@ resource "aws_eks_node_group" "eks_cluster_node_group" {
   ]
 }
 
+
+#-------
+#--- EFS
+#-------
+
+resource "aws_efs_file_system" "efs" {
+  creation_token = format("%s_%s", var.project, "efs")
+
+  tags = {
+    Name = format("%s_%s", var.project, "efs")
+    project = var.project
+  }
+}
+
+resource "aws_efs_mount_target" "efs_mounttarget_1" {
+  file_system_id = aws_efs_file_system.efs.id
+  subnet_id      = data.terraform_remote_state.tf_network.outputs.subpub1_id
+}
+
+resource "aws_efs_mount_target" "efs_mounttarget_2" {
+  file_system_id = aws_efs_file_system.efs.id
+  subnet_id      = data.terraform_remote_state.tf_network.outputs.subpub2_id
+}
+
+
 #-----------
 #--- Outputs
 #-----------
@@ -308,19 +338,25 @@ output "keypair_id" {
 output "eks_cluster_role_id" {
   value = aws_iam_role.eks_cluster_role.id
 }
-
 output "eks_node_role_id" {
   value = aws_iam_role.eks_node_role.id
 }
-
 output "eks_cluster_id" {
   value = aws_eks_cluster.eks_cluster.id
 }
-
 output "eks_cluster_arn" {
   value = aws_eks_cluster.eks_cluster.arn
 }
-
 output "eks_cluster_version" {
   value = aws_eks_cluster.eks_cluster.version
+}
+
+output "efs_id" {
+  value = aws_efs_file_system.efs.id
+}
+output "efs_arn" {
+  value = aws_efs_file_system.efs.arn
+}
+output "efs_dns_name" {
+  value = aws_efs_file_system.efs.dns_name
 }
