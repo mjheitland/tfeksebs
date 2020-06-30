@@ -333,6 +333,17 @@ resource "aws_efs_mount_target" "efs_mounttarget_2" {
 #--- Outputs
 #-----------
 
+output "eks_cluster_role_name" {
+  value = aws_iam_role.eks_cluster_role.name
+}
+output "eks_node_role_name" {
+  value = aws_iam_role.eks_node_role.name
+}
+
+output "eks_cw_loggroup_name" {
+  value = aws_cloudwatch_log_group.eks_cw_loggroup.name
+}
+
 output "keypair_id" {
   value = aws_key_pair.keypair.id
 }
