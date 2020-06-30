@@ -86,7 +86,7 @@ variable "cluster_endpoint_private_access" {
 variable "cluster_endpoint_public_access_cidrs" {
   description = "List of CIDR blocks which can access the Amazon EKS public API server endpoint."
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+  default     = ["54.240.197.238/32"] # ["0.0.0.0/0"]
 }
 
 variable "cluster_endpoint_public_access" {
@@ -284,9 +284,9 @@ resource "aws_eks_node_group" "eks_cluster_node_group" {
   ]
 
   scaling_config {
-    desired_size = 1
-    max_size     = 1
-    min_size     = 1
+    desired_size = 3
+    max_size     = 3
+    min_size     = 3
   }
 
   remote_access {
