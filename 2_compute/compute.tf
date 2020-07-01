@@ -83,10 +83,12 @@ variable "cluster_endpoint_private_access" {
   default     = false
 }
 
+# https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html
+# https://aws.amazon.com/about-aws/whats-new/2019/12/amazon-eks-enables-network-access-restrictions-to-kubernetes-cluster-public-endpoints/
 variable "cluster_endpoint_public_access_cidrs" {
   description = "List of CIDR blocks which can access the Amazon EKS public API server endpoint."
   type        = list(string)
-  default     = ["54.240.197.238/32"] # ["0.0.0.0/0"]
+  default     = ["0.0.0.0/0"]
 }
 
 variable "cluster_endpoint_public_access" {
