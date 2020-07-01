@@ -134,7 +134,7 @@ aws eks describe-cluster ebsEKS
 
 * create EFS network share
 
-Terraform code:
+Terraform code (apply takes 15 min for EKS cluster plus 5 min for EKS Cluster Node Group, VPN does not cause any issues during deployment):
 ```
 cd 2_eks
 terraform init -backend-config=../backend.config
