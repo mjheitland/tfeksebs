@@ -213,6 +213,30 @@ resource "aws_iam_role_policy" "Amazon_EBS_CSI_Driver_Policy" {
 POLICY
 }
 
+resource "aws_iam_role_policy" "node_ASG_Policy" {
+  name   = "node_ASG_Policy"
+  role   = aws_iam_role.eks_node_role.id
+  policy = <<POLICY
+{
+  "Version":"2012-10-17",
+  "Statement":[
+    {
+      "Effect":"Allow",
+      "Action":[
+        "autoscaling:DescribeAutoScalingGroups",
+        "autoscaling:DescribeAutoScalingInstances",
+        "autoscaling:DescribeLaunchConfigurations",
+        "autoscaling:DescribeTags",
+        "autoscaling:SetDesiredCapacity",
+        "autoscaling:TerminateInstanceInAutoScalingGroup"
+      ],
+      "Resource":"*"
+    }
+  ]
+}
+POLICY
+}
+
 
 #-----------
 #--- Cluster
@@ -286,9 +310,9 @@ resource "aws_eks_node_group" "eks_cluster_node_group" {
   ]
 
   scaling_config {
-    desired_size = 3
+    desired_size = 1
     max_size     = 3
-    min_size     = 3
+    min_size     = 1
   }
 
   remote_access {

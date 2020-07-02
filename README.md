@@ -23,6 +23,15 @@ This project lists all the steps that are required to
 
   sudo mv kubectl /usr/local/bin
 ```
+* Deploy the Metrics Server with the following command:
+```
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.6/components.yaml
+```
+* Verify that the metrics-server deployment is running the desired number of pods with the following command.
+[Installing the Kubernetes Metrics Server](https://docs.aws.amazon.com/eks/latest/userguide/metrics-server.html)
+```
+kubectl get deployment metrics-server -n kube-system
+```
 * install flask python library on local box:
 ```
   pip3 install flask
@@ -223,3 +232,7 @@ cd /data
 ls
 exit
 ```
+
+## Links
+
+[Checking out Auto-Scaling](https://docs.aws.amazon.com/eks/latest/userguide/cluster-autoscaler.html)
