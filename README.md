@@ -238,3 +238,5 @@ exit
 ## Links
 
 [Checking out Auto-Scaling](https://docs.aws.amazon.com/eks/latest/userguide/cluster-autoscaler.html)
+
+[Amazon EKS Troubleshooting](https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html)
