@@ -11,6 +11,8 @@ This project lists all the steps that are required to
 - deploy an EKS cluster with worker nodes
 - run the Docker container in a Kubernetes pod within EKS
 - test the web server
+- use EBS as pod storage
+- use EFS as pod storage (share volume btw two pods)
 
 
 ## Pre-requisites
@@ -35,7 +37,7 @@ This project lists all the steps that are required to
 
   http://localhost:8080
 ```
-* build docker image and test it:
+* build docker image and test it locally (inside Docker Desktop):
 ```  
   docker build . -t pythonhelloworld
 
