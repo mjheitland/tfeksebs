@@ -240,3 +240,5 @@ exit
 [Checking out Auto-Scaling](https://docs.aws.amazon.com/eks/latest/userguide/cluster-autoscaler.html)
 
 [Amazon EKS Troubleshooting](https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html)
+
+[Capacity-Optimized Spot Instance Allocation](https://aws.amazon.com/blogs/aws/capacity-optimized-spot-instance-allocation-in-action-at-mobileye-and-skyscanner/?sc_campaign=pac_cia_2020_blog_capacity-optimized&sc_channel=el&sc_geo=mult&sc_icampaign=pac_cia_2020_blog_capacity-optimized&sc_ichannel=ha&sc_icontent=awssm-3771&sc_iplace=console-ec2autoscaling&sc_outcome=Enterprise_Digital_Marketing&trk=el_a134p000006C2hLAAS~ha_awssm-3771&trkCampaign=pac-edm-2020-ec2_blog-capacity-optimized)
