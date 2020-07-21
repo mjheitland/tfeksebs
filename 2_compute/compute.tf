@@ -253,7 +253,7 @@ resource "aws_cloudwatch_log_group" "eks_cw_loggroup" {
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_cluster_role.arn
-  version = "1.16"
+  version = "1.17"
   enabled_cluster_log_types = [
     "api", 
     "audit"
