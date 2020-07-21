@@ -76,7 +76,7 @@ kubectl get deployment metrics-server -n kube-system
   docker push 094033154904.dkr.ecr.eu-west-1.amazonaws.com/pythonhelloworld
 ```
 
-## Layer 0 - Terraform Remote State 
+## Layer 0 - Terraform Remote State (2 min)
 
 Set up remote state for Terraform creating a bucket for the state and a DynamoDB table for locking<br>
 (if you want to save TF state including this layer, run the commands twice and remove the comments for the backend in tfstate.tf on the second run)
@@ -92,7 +92,7 @@ terraform apply -auto-approve
 terraform destroy -auto-approve
 ```
 
-## Layer 1 - Network
+## Layer 1 - Network (5 min)
 
 The following steps are done automatically if you deploy 1_network with Terraform:
 
@@ -119,7 +119,7 @@ terraform apply -auto-approve
 terraform destroy -auto-approve
 ```
 
-## Layer 2 - Compute
+## Layer 2 - Compute (15 min)
 
 These steps are done automatically if you deploy 2_compute with Terraform:
 
