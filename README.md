@@ -17,13 +17,10 @@ This project lists all the steps that are required to
 
 ## Pre-requisites
 
-* install kubectl on local box:
+* Install Docker and kubectl: 
+For macOS:
 ```
-  curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/darwin/amd64/kubectl
-
-  chmod +x kubectl
-
-  sudo mv kubectl /usr/local/bin
+https://matthewpalmer.net/kubernetes-app-developer/articles/guide-install-kubernetes-mac.html 
 ```
 * Deploy the Metrics Server with the following command:
 ```
