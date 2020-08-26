@@ -63,7 +63,7 @@ kubectl get deployment metrics-server -n kube-system
 ```
   aws ecr create-repository --repository-name pythonhelloworld
 
-  aws ecr get-login-password \
+  aws ecr get-login-password --region eu-west-1 \
   | docker login \
       --username AWS \
       --password-stdin 094033154904.dkr.ecr.eu-west-1.amazonaws.com
@@ -86,7 +86,9 @@ terraform init -backend-config=../backend.config
 
 terraform apply -auto-approve
 
-terraform destroy -auto-approve
+cd ..
+
+# terraform destroy -auto-approve
 ```
 
 ## Layer 1 - Network (5 min)
@@ -112,8 +114,10 @@ terraform init -backend-config=../backend.config
 
 terraform apply -auto-approve
 
-(beforehand ELB has to be destroyed manually!)
-terraform destroy -auto-approve
+cd ..
+
+# (beforehand ELB has to be destroyed manually!)
+# terraform destroy -auto-approve
 ```
 
 ## Layer 2 - Compute (15 min)
@@ -145,11 +149,14 @@ aws eks describe-cluster ebsEKS
 Terraform code (apply takes 15 min for EKS cluster plus 5 min for EKS Cluster Node Group, VPN does not cause any issues during deployment):
 ```
 cd 2_eks
+
 terraform init -backend-config=../backend.config
 
 terraform apply -auto-approve
 
-terraform destroy -auto-approve
+cd ..
+
+# terraform destroy -auto-approve
 ```
 
 ## Manual steps to configure kubectl to point to our new EKS
