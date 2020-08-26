@@ -27,7 +27,7 @@ This project lists all the steps that are required to
 ```
 * Deploy the Metrics Server with the following command:
 ```
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.6/components.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.7/components.yaml 
 ```
 * Verify that the metrics-server deployment is running the desired number of pods with the following command.
 [Installing the Kubernetes Metrics Server](https://docs.aws.amazon.com/eks/latest/userguide/metrics-server.html)

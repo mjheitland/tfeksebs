@@ -1,0 +1,31 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: pingtest
+  labels:
+    app: pinger
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pinger
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: pinger
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: app
+        image: centos
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+        volumeMounts:
+        - name: persistent-storage
+          mountPath: /data
+      volumes:
+      - name: persistent-storage
+        persistentVolumeClaim:
+          claimName: ebs-claim
