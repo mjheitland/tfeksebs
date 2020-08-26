@@ -148,7 +148,7 @@ aws eks describe-cluster ebsEKS
 
 Terraform code (apply takes 15 min for EKS cluster plus 5 min for EKS Cluster Node Group, VPN does not cause any issues during deployment):
 ```
-cd 2_eks
+cd 2_compute
 
 terraform init -backend-config=../backend.config
 
@@ -158,6 +158,7 @@ cd ..
 
 # terraform destroy -auto-approve
 ```
+
 
 ## Manual steps to configure kubectl to point to our new EKS
 
@@ -175,7 +176,11 @@ kubectl get nodes
 [see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
-kubectl apply -f ebs/
+
+kubectl apply -f 2_compute/ebs/
+
+sleep 10
+
 kubectl get persistentvolumes
 ```
 The kubectl command creates a StorageClass, PersistentVolumeClaim (PVC), and pod. The pod references the PVC. An Amazon EBS volume is provisioned only when the pod is created.
@@ -192,14 +197,17 @@ kubectl exec -it app cat /data/out.txt
 [see "Add persistent storage to EKS"](https://aws.amazon.com/premiumsupport/knowledge-center/eks-persistent-storage/)
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
-kubectl get persistentvolumes
 ```
 
-* set "volumehandle" to output value efs_id in efs/pv.yaml
+* in 2_compute/efs/pv.yaml, set "volumehandle" to output value efs_id (e.g. volumeHandle: fs-8c59eb46)
 
 * test EFS access from two different pods (out1.txt was created by app1, out2.txt by app2):
 ```
-kubectl apply -f efs/
+kubectl apply -f 2_compute/efs/
+
+kubectl get pods
+
+kubectl get persistentvolumes
 
 kubectl exec -it app1 -- tail /data/out1.txt 
 kubectl exec -it app1 -- tail /data/out2.txt 
@@ -213,18 +221,18 @@ kubectl exec -it app2 -- tail /data/out2.txt
 
 * deploy Kubernetes pod:
 ```
-kubectl apply -f deployment.yaml
+kubectl apply -f 2_compute/deployment.yaml
 kubectl get deployment eksebs-deployment -o yaml
 kubectl get pods
 ```
 
 * deploy Kubernetes service (adds an ELB so that we can reach the pod from outside):
 ```
-kubectl apply -f service.yaml
+kubectl apply -f 2_compute/service.yaml
 kubectl get service eksebs-service
 ```
 
-* test the app running on Docker in a Kubernetes cluster in the browser (use the ELB arn output from the last command):
+* test the app running on Docker in a Kubernetes cluster in the browser (use the ELB arn output from the last command - EXTERNAL_IP):
 ```
 xxx.eu-west-1.elb.amazonaws.com
 ```
@@ -246,3 +254,9 @@ exit
 [Amazon EKS Troubleshooting](https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html)
 
 [Capacity-Optimized Spot Instance Allocation](https://aws.amazon.com/blogs/aws/capacity-optimized-spot-instance-allocation-in-action-at-mobileye-and-skyscanner/?sc_campaign=pac_cia_2020_blog_capacity-optimized&sc_channel=el&sc_geo=mult&sc_icampaign=pac_cia_2020_blog_capacity-optimized&sc_ichannel=ha&sc_icontent=awssm-3771&sc_iplace=console-ec2autoscaling&sc_outcome=Enterprise_Digital_Marketing&trk=el_a134p000006C2hLAAS~ha_awssm-3771&trkCampaign=pac-edm-2020-ec2_blog-capacity-optimized)
+
+[Running a Kubernetes cluster on EKS with Fargate and Terraform](https://engineering.finleap.com/posts/2020-02-27-eks-fargate-terraform/)
+
+[EKS Fargate with Terraform - Source code](https://github.com/finleap/tf-eks-fargate-tmpl)
+
+[AWS Fargate User Guide](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html)
