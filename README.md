@@ -154,8 +154,6 @@ terraform init -backend-config=../backend.config
 
 terraform apply -auto-approve
 
-cd ..
-
 # terraform destroy -auto-approve
 ```
 
@@ -177,7 +175,7 @@ kubectl get nodes
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
 
-kubectl apply -f 2_compute/ebs/
+kubectl apply -f ebs/
 
 sleep 10
 
@@ -199,11 +197,11 @@ kubectl exec -it app cat /data/out.txt
 kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
 ```
 
-* in 2_compute/efs/pv.yaml, set "volumehandle" to output value efs_id (e.g. volumeHandle: fs-8c59eb46)
+* in efs/pv.yaml, set "volumehandle" to Terraform's output value from 2_compute 'efs_id' (e.g. volumeHandle: fs-8c59eb46)
 
 * test EFS access from two different pods (out1.txt was created by app1, out2.txt by app2):
 ```
-kubectl apply -f 2_compute/efs/
+kubectl apply -f efs/
 
 kubectl get pods
 
@@ -221,18 +219,18 @@ kubectl exec -it app2 -- tail /data/out2.txt
 
 * deploy Kubernetes pod:
 ```
-kubectl apply -f 2_compute/deployment.yaml
+kubectl apply -f deployment.yaml
 kubectl get deployment eksebs-deployment -o yaml
 kubectl get pods
 ```
 
 * deploy Kubernetes service (adds an ELB so that we can reach the pod from outside):
 ```
-kubectl apply -f 2_compute/service.yaml
+kubectl apply -f service.yaml
 kubectl get service eksebs-service
 ```
 
-* test the app running on Docker in a Kubernetes cluster in the browser (use the ELB arn output from the last command - EXTERNAL_IP):
+* wait a while, then open a browser and test the app running on Docker in a Kubernetes cluster (use the ELB arn output from the last command - EXTERNAL_IP):
 ```
 xxx.eu-west-1.elb.amazonaws.com
 ```
@@ -241,9 +239,10 @@ should return "Hello world!"
 * test access to EFS share
 ```
 kubectl get pods
-kubectl exec -it eksebs-deployment-xxx sh
+kubectl exec -it eksebs-deployment-eksebs-deployment-xxx sh
 cd /data
 ls
+# you should see two files: out1.txt and out2.txt
 exit
 ```
 
