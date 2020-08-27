@@ -116,7 +116,7 @@ terraform apply -auto-approve
 
 cd ..
 
-# (beforehand ELB has to be destroyed manually!)
+# (beforehand ELB and EC2 volumes have to be destroyed manually!)
 # terraform destroy -auto-approve
 ```
 
