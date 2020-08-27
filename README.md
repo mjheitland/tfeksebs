@@ -1,4 +1,4 @@
-# tfeksebs - build and run Docker image on EKS, add EBS storage
+# tfeksebs - build and run Docker image on EKS, add EBS and EFS storage
 
 ## Intro
 
