@@ -116,7 +116,7 @@ terraform apply -auto-approve
 
 cd ..
 
-# (beforehand ELB and EC2 volumes have to be destroyed manually!)
+# (beforehand ELB and EC2 volumes have to be destroyed manually, they were created later by Kubernetes, not by Terraform!)
 # terraform destroy -auto-approve
 ```
 
